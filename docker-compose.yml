@@ -1,0 +1,10 @@
+services:
+  scheduler:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./benchmark_results:/app/benchmark_results

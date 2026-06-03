@@ -1,0 +1,26 @@
+[
+  {
+    "name": "cheap",
+    "model": "openai/gpt-4o-mini",
+    "estimated_cost_per_1k_tokens_usd": 0.0006,
+    "baseline_latency_ms": 1200,
+    "quality_score": 0.62,
+    "enabled": true
+  },
+  {
+    "name": "fast",
+    "model": "google/gemini-flash-1.5",
+    "estimated_cost_per_1k_tokens_usd": 0.0010,
+    "baseline_latency_ms": 850,
+    "quality_score": 0.70,
+    "enabled": true
+  },
+  {
+    "name": "quality",
+    "model": "anthropic/claude-3-haiku",
+    "estimated_cost_per_1k_tokens_usd": 0.0025,
+    "baseline_latency_ms": 1500,
+    "quality_score": 0.82,
+    "enabled": true
+  }
+]

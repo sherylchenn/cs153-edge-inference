@@ -41,6 +41,15 @@ request_logger = JSONLRequestLogger(settings.request_log_path)
 app = FastAPI(title="Adaptive Inference Scheduler", version="1.0.0")
 instrument_app(app)
 
+@app.get("/")
+def root() -> dict[str, str]:
+    return {
+        "name": "Adaptive Inference Scheduler",
+        "docs": "/docs",
+        "health": "/health",
+        "backends": "/backends",
+        "metrics": "/metrics",
+    }
 
 @dataclass
 class AttemptResult:

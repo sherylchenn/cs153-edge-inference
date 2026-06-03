@@ -16,7 +16,7 @@ DEFAULT_BACKENDS = [
     ),
     BackendConfig(
         name="fast",
-        model="google/gemini-flash-1.5",
+        model="google/gemini-2.5-flash-lite",
         estimated_cost_per_1k_tokens_usd=0.0010,
         baseline_latency_ms=850,
         quality_score=0.70,

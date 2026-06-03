@@ -95,7 +95,7 @@ Example response:
   "policy": "adaptive",
   "mode": "balanced",
   "selected_backend": "fast",
-  "model": "google/gemini-flash-1.5",
+  "model": "google/gemini-2.5-flash-lite",
   "fallback_used": false,
   "output": "...",
   "latency_ms": 903.2,

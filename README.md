@@ -132,7 +132,11 @@ Example response:
 Start the API first, then run:
 
 ```bash
-python scripts/run_benchmark.py --requests 12 --concurrency 3 --policies direct random round_robin adaptive --mode balanced
+python scripts/run_benchmark.py \
+  --requests 8 \
+  --concurrency 2 \
+  --policies direct random round_robin adaptive \
+  --mode balanced
 ```
 
 Benchmark output is written to `benchmark_results/`.
@@ -140,8 +144,13 @@ Benchmark output is written to `benchmark_results/`.
 To test whether the scheduler reacts to a bad backend, artificially degrade one backend:
 
 ```bash
-python scripts/simulate_degradation.py --backend fast --delay-ms 1800 --failure-rate 0.25
-python scripts/run_benchmark.py --requests 12 --concurrency 3 --policies round_robin adaptive --mode balanced
+python scripts/simulate_degradation.py --backend fast --delay-ms 2500 --failure-rate 0.25
+python scripts/run_benchmark.py \
+  --requests 8 \
+  --concurrency 2 \
+  --policies direct random round_robin adaptive \
+  --mode balanced
+python scripts/simulate_degradation.py --backend fast --delay-ms 0 --failure-rate 0
 ```
 
 Then reset the backend:
@@ -172,12 +181,51 @@ python scripts/summarize_logs.py data/request_logs.jsonl
 pytest
 ```
 
+
+## DigitalOcean Deployment Check
+
+I deployed the FastAPI scheduler to a DigitalOcean Droplet to confirm that the project can run outside my local machine.
+
+Deployment environment:
+
+* Provider: DigitalOcean
+* Region: SFO2
+* Operating system: Ubuntu 24.04 LTS x64
+* Droplet type: Basic shared CPU
+* Size: 1 vCPU / 1 GB RAM
+* Estimated cost: $6/month
+* Runtime: FastAPI + Uvicorn
+* External inference provider: OpenRouter
+* Server port: 8000
+* DigitalOcean insights/metrics: enabled for basic CPU visibility
+
+After deployment, I verified that the cloud-hosted service returned the expected root response and exposed the main project endpoints:
+
+```text
+/
+/docs
+/health
+/backends
+/infer
+/metrics
+```
+
+This deployment was used as a reproducibility and cloud smoke test, not as the main benchmark environment. The benchmark results in `docs/RESULTS.md` were collected locally so that the policy comparisons stayed consistent. The DigitalOcean deployment shows that the scheduler can be run on a real cloud VM with minimal resources.
+
+Security note: I did not leave the public deployment running indefinitely because the `/infer` endpoint can trigger paid OpenRouter API calls. For longer-term use, this service should be protected with authentication, a firewall, or an SSH tunnel.
+
 ## Project limitations
 
 This project does not measure real GPU utilization or physical edge-device state. OpenRouter hides the underlying infrastructure, so this project observes request-level behavior rather than hardware-level behavior.
 
 That limitation is intentional. The project focuses on the control-plane problem: using measured application-level signals to make better inference routing decisions than fixed or naive routing baselines.
 
-## Integrity disclosure
 
-The initial scaffold was generated with AI assistance. The substantive implementation in this version includes the backend abstraction, OpenRouter client, adaptive routing policy, routing baselines, metrics/logging layer, Prometheus-style metrics endpoint, benchmark scripts, tests, and documentation.
+## AI Assistance Disclosure
+
+This project was developed with AI assistance. I used ChatGPT to help brainstorm the project direction, refine the design doc, generate the initial code scaffold, debug setup issues, and improve documentation.
+
+The AI-generated scaffold was substantially modified and extended during the project. The final implementation includes working OpenRouter-backed inference, multiple routing policies, request logging, Prometheus-style metrics, benchmark scripts, controlled degradation testing, and analysis of results. I reviewed and tested the generated code, fixed configuration issues, ran the benchmarks myself, and documented the limitations of the system.
+
+AI assistance was also used to help organize the final writeup and interpret benchmark results. I made the final project decisions, configured the API and deployment, ran the tests and benchmarks, reviewed the generated code, and documented the limitations. External services used in the project include OpenRouter for model inference and DigitalOcean for the cloud deployment check.
+

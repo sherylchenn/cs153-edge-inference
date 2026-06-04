@@ -70,34 +70,9 @@ This makes the scheduler behavior inspectable while it runs. The system records 
 
 ## DigitalOcean Deployment Check
 
-I deployed the FastAPI scheduler to a DigitalOcean Droplet to confirm that the project can run outside my local machine.
+I deployed the FastAPI scheduler to a DigitalOcean Droplet as a cloud smoke test. The deployment used Ubuntu 24.04 LTS x64 in SFO2 on a Basic shared CPU Droplet with 1 vCPU and 1 GB RAM.
 
-Deployment environment:
-
-* Provider: DigitalOcean
-* Region: SFO2
-* Operating system: Ubuntu 24.04 LTS x64
-* Droplet type: Basic shared CPU
-* Size: 1 vCPU / 1 GB RAM
-* Estimated cost: $6/month
-* Runtime: FastAPI + Uvicorn
-* External inference provider: OpenRouter
-* Server port: 8000
-* DigitalOcean insights/metrics: enabled for basic CPU visibility
-
-After deployment, I verified that the cloud-hosted service returned the expected root response and exposed the main project endpoints:
-
-```text
-/
-/docs
-/health
-/backends
-/infer
-/metrics
-```
-
-This deployment was used as a reproducibility and cloud smoke test, not as the main benchmark environment. The benchmark results in `docs/RESULTS.md` were collected locally so that the policy comparisons stayed consistent. The DigitalOcean deployment shows that the scheduler can be run on a real cloud VM with minimal resources.
-
+The deployed service successfully exposed `/`, `/docs`, `/health`, `/backends`, `/infer`, and `/metrics`. I did not use this deployment as the main benchmark environment because the benchmark comparisons were collected locally for consistency. The deployment shows that the scheduler can run on a small real cloud VM with minimal resources.
 
 ## Limitations
 
@@ -113,10 +88,3 @@ The adaptive policy was not always best in every clean run, but it performed esp
 
 Overall, the project demonstrates a small but functional inference control plane. It routes real model requests, tracks runtime behavior, exposes metrics, and compares adaptive routing against simpler baselines.
 
-## AI Assistance Disclosure
-
-This project was developed with AI assistance. I used ChatGPT to help brainstorm the project direction, refine the design doc, generate the initial code scaffold, debug setup issues, and improve documentation.
-
-The AI-generated scaffold was substantially modified and extended during the project. The final implementation includes working OpenRouter-backed inference, multiple routing policies, request logging, Prometheus-style metrics, benchmark scripts, controlled degradation testing, and analysis of results. I reviewed and tested the generated code, fixed configuration issues, ran the benchmarks myself, and documented the limitations of the system.
-
-AI assistance was also used to help organize the final writeup and interpret benchmark results. However, the final project decisions, API setup, deployment, testing, and evaluation were completed by me. External services used in the project include OpenRouter for model inference and DigitalOcean for the cloud deployment check.

@@ -112,3 +112,11 @@ The quality check was also limited. I manually reviewed a small number of output
 The adaptive policy was not always best in every clean run, but it performed especially well under concurrency and controlled backend degradation. The strongest result was the degradation test: when the `fast` backend became slower and less reliable, adaptive routing mostly shifted away from it, while random and round-robin still routed into it and triggered fallbacks.
 
 Overall, the project demonstrates a small but functional inference control plane. It routes real model requests, tracks runtime behavior, exposes metrics, and compares adaptive routing against simpler baselines.
+
+## AI Assistance Disclosure
+
+This project was developed with AI assistance. I used ChatGPT to help brainstorm the project direction, refine the design doc, generate the initial code scaffold, debug setup issues, and improve documentation.
+
+The AI-generated scaffold was substantially modified and extended during the project. The final implementation includes working OpenRouter-backed inference, multiple routing policies, request logging, Prometheus-style metrics, benchmark scripts, controlled degradation testing, and analysis of results. I reviewed and tested the generated code, fixed configuration issues, ran the benchmarks myself, and documented the limitations of the system.
+
+AI assistance was also used to help organize the final writeup and interpret benchmark results. However, the final project decisions, API setup, deployment, testing, and evaluation were completed by me. External services used in the project include OpenRouter for model inference and DigitalOcean for the cloud deployment check.

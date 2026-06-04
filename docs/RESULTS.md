@@ -28,6 +28,18 @@ In this experiment, I artificially degraded the `fast` backend by adding delay a
 
 Under degradation, adaptive routing mostly avoided the degraded `fast` backend and achieved the lowest average latency with zero fallbacks. This supports the main project claim: a lightweight scheduler can use runtime behavior to make better routing decisions than policies that ignore backend health.
 
+## Lightweight Output Quality Check
+
+I manually reviewed outputs from the cheap, fast, and quality backends on three prompts. This was not a full human evaluation, but a sanity check that the scheduler was routing to usable model outputs.
+
+| Backend | Correctness | Completeness | Concision | Notes |
+|---|---:|---:|---:|---|
+| cheap | 4 | 4 | 4 | Clear and reliable across prompts; best overall balance, though one longer answer was cut off by the token limit. |
+| fast | 4 | 3 | 4 | Strong concise explanation for simple prompts, but one answer over-expanded and was cut off before finishing. |
+| quality | 3 | 3 | 3 | Usable responses, but not clearly better in this sample; one routing answer interpreted routing as internal model routing instead of backend/API routing. |
+
+Takeaway: all three backends produced usable answers, but the higher-cost backend was not clearly better in this small sample. Because the quality check was small and manual, I did not use it as the main optimization target. The main evaluation focused on latency, cost, fallback behavior, and reliability.
+
 ## Limitations
 
 These benchmarks are small because they use paid API calls. The system measures application-level latency, fallback behavior, and estimated cost, not real GPU utilization. OpenRouter also hides the underlying provider infrastructure, so this project should be understood as an application-level inference scheduler rather than a physical GPU scheduler.
